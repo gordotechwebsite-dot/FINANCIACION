@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { FinancingResult } from '../types';
 import { formatCurrency, formatDateShort } from '../utils/calculations';
 import { generatePDF } from '../utils/pdfGenerator';
+import { sendToGoogleSheets } from '../utils/sheetsExport';
 
 interface ResultsViewProps {
   result: FinancingResult;
@@ -11,6 +12,7 @@ interface ResultsViewProps {
 
 export default function ResultsView({ result, onBack, onReset }: ResultsViewProps) {
   const [confirmed, setConfirmed] = useState(false);
+  const [sending, setSending] = useState(false);
   const freqLabel = result.config.frequency === 'mensual' ? 'mensual' : 'quincenal';
 
   return (
@@ -111,10 +113,16 @@ export default function ResultsView({ result, onBack, onReset }: ResultsViewProp
           </button>
           <button
             type="button"
-            onClick={() => setConfirmed(true)}
+            onClick={async () => {
+              setSending(true);
+              await sendToGoogleSheets(result);
+              setSending(false);
+              setConfirmed(true);
+            }}
+            disabled={sending}
             className="flex-1 py-2.5 sm:py-3 bg-accent text-white rounded-lg font-semibold text-sm sm:text-base transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
           >
-            Confirmar
+            {sending ? 'Guardando...' : 'Confirmar'}
           </button>
         </div>
       ) : (
