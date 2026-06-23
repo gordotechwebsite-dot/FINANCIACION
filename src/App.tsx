@@ -62,29 +62,27 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-primary to-primary-light shadow-lg">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-center gap-4">
+    <div className="min-h-screen flex flex-col">
+      <header className="bg-primary shadow-md">
+        <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-center gap-3">
           <img
             src={logoGordotech}
             alt="Gordotech"
-            className="h-12 w-12 object-contain"
+            className="h-9 w-9 object-contain"
           />
-          <div className="text-center">
-            <h1 className="text-white text-xl font-bold tracking-wide">GORDOTECH</h1>
-            <p className="text-white/60 text-xs">Sistema de Financiacion</p>
+          <div>
+            <h1 className="text-white text-lg font-bold leading-tight">GORDOTECH</h1>
+            <p className="text-white/50 text-[10px] tracking-wider uppercase">Financiacion</p>
           </div>
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="flex-1 w-full max-w-lg mx-auto px-4 py-5">
         {step < 5 && (
           <StepIndicator currentStep={step} totalSteps={5} labels={STEP_LABELS} />
         )}
 
-        <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-6 sm:p-8">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200/60 p-5 sm:p-6">
           {step === 1 && (
             <ClientForm initialData={client} onNext={handleClientNext} />
           )}
@@ -116,8 +114,8 @@ export default function App() {
           )}
         </div>
 
-        <footer className="text-center mt-8 text-xs text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Gordotech - Todos los derechos reservados</p>
+        <footer className="text-center mt-6 pb-4 text-[11px] text-gray-400">
+          Gordotech &middot; {new Date().getFullYear()}
         </footer>
       </main>
     </div>

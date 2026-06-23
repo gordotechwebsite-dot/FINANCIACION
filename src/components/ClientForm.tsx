@@ -12,9 +12,9 @@ export default function ClientForm({ initialData, onNext }: ClientFormProps) {
 
   function validate(): boolean {
     const newErrors: Partial<Record<keyof ClientData, string>> = {};
-    if (!data.name.trim()) newErrors.name = 'El nombre es obligatorio';
-    if (!data.cedula.trim()) newErrors.cedula = 'La cedula es obligatoria';
-    if (!data.phone.trim()) newErrors.phone = 'El numero de celular es obligatorio';
+    if (!data.name.trim()) newErrors.name = 'Obligatorio';
+    if (!data.cedula.trim()) newErrors.cedula = 'Obligatorio';
+    if (!data.phone.trim()) newErrors.phone = 'Obligatorio';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -25,71 +25,63 @@ export default function ClientForm({ initialData, onNext }: ClientFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-primary">Datos del Cliente</h2>
-        <p className="text-gray-500 mt-1">Ingresa la informacion del cliente</p>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="mb-4">
+        <h2 className="text-lg font-bold text-primary">Datos del Cliente</h2>
+        <p className="text-gray-400 text-xs mt-0.5">Completa los datos para iniciar</p>
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <label className="text-sm font-semibold text-gray-700 mb-1 block">
-            Nombre Completo
-          </label>
-          <input
-            type="text"
-            value={data.name}
-            onChange={(e) => setData({ ...data, name: e.target.value })}
-            placeholder="Ej: Juan Perez"
-            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 outline-none ${
-              errors.name
-                ? 'border-highlight bg-red-50 focus:border-highlight'
-                : 'border-gray-200 bg-white focus:border-accent focus:ring-2 focus:ring-accent/10'
-            }`}
-          />
-          {errors.name && <p className="text-highlight text-xs mt-1">{errors.name}</p>}
-        </div>
+      <div>
+        <label className="text-xs font-medium text-gray-500 mb-1 block">Nombre completo</label>
+        <input
+          type="text"
+          value={data.name}
+          onChange={(e) => setData({ ...data, name: e.target.value })}
+          placeholder="Juan Perez"
+          className={`w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-colors ${
+            errors.name
+              ? 'border-highlight bg-red-50/50'
+              : 'border-gray-300 focus:border-accent'
+          }`}
+        />
+        {errors.name && <p className="text-highlight text-[11px] mt-1">{errors.name}</p>}
+      </div>
 
-        <div>
-          <label className="text-sm font-semibold text-gray-700 mb-1 block">
-            Cedula de Ciudadania
-          </label>
-          <input
-            type="text"
-            value={data.cedula}
-            onChange={(e) => setData({ ...data, cedula: e.target.value.replace(/[^0-9]/g, '') })}
-            placeholder="Ej: 1234567890"
-            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 outline-none ${
-              errors.cedula
-                ? 'border-highlight bg-red-50 focus:border-highlight'
-                : 'border-gray-200 bg-white focus:border-accent focus:ring-2 focus:ring-accent/10'
-            }`}
-          />
-          {errors.cedula && <p className="text-highlight text-xs mt-1">{errors.cedula}</p>}
-        </div>
+      <div>
+        <label className="text-xs font-medium text-gray-500 mb-1 block">Cedula</label>
+        <input
+          type="text"
+          value={data.cedula}
+          onChange={(e) => setData({ ...data, cedula: e.target.value.replace(/[^0-9]/g, '') })}
+          placeholder="1234567890"
+          className={`w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-colors ${
+            errors.cedula
+              ? 'border-highlight bg-red-50/50'
+              : 'border-gray-300 focus:border-accent'
+          }`}
+        />
+        {errors.cedula && <p className="text-highlight text-[11px] mt-1">{errors.cedula}</p>}
+      </div>
 
-        <div>
-          <label className="text-sm font-semibold text-gray-700 mb-1 block">
-            Numero de Celular
-          </label>
-          <input
-            type="tel"
-            value={data.phone}
-            onChange={(e) => setData({ ...data, phone: e.target.value.replace(/[^0-9]/g, '') })}
-            placeholder="Ej: 3001234567"
-            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 outline-none ${
-              errors.phone
-                ? 'border-highlight bg-red-50 focus:border-highlight'
-                : 'border-gray-200 bg-white focus:border-accent focus:ring-2 focus:ring-accent/10'
-            }`}
-          />
-          {errors.phone && <p className="text-highlight text-xs mt-1">{errors.phone}</p>}
-        </div>
+      <div>
+        <label className="text-xs font-medium text-gray-500 mb-1 block">Celular</label>
+        <input
+          type="tel"
+          value={data.phone}
+          onChange={(e) => setData({ ...data, phone: e.target.value.replace(/[^0-9]/g, '') })}
+          placeholder="3001234567"
+          className={`w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-colors ${
+            errors.phone
+              ? 'border-highlight bg-red-50/50'
+              : 'border-gray-300 focus:border-accent'
+          }`}
+        />
+        {errors.phone && <p className="text-highlight text-[11px] mt-1">{errors.phone}</p>}
       </div>
 
       <button
         type="submit"
-        className="w-full py-3.5 bg-accent hover:bg-accent/90 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30 cursor-pointer"
+        className="w-full py-3 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
       >
         Continuar
       </button>

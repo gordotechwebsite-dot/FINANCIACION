@@ -1,4 +1,3 @@
-import { FileDown, RotateCcw, CalendarDays, User, Smartphone, ArrowRightLeft, Receipt } from 'lucide-react';
 import type { FinancingResult } from '../types';
 import { formatCurrency, formatDate, formatDateShort } from '../utils/calculations';
 import { generatePDF } from '../utils/pdfGenerator';
@@ -12,158 +11,135 @@ export default function ResultsView({ result, onReset }: ResultsViewProps) {
   const freqLabel = result.config.frequency === 'mensual' ? 'Mensual' : 'Quincenal';
 
   return (
-    <div className="space-y-6">
-      <div className="text-center mb-4">
-        <h2 className="text-2xl font-bold text-primary">Plan de Financiacion</h2>
-        <p className="text-gray-500 mt-1">Resumen completo y calendario de pagos</p>
+    <div className="space-y-5">
+      <div className="mb-2">
+        <h2 className="text-lg font-bold text-primary">Resumen de Financiacion</h2>
+        <p className="text-gray-400 text-xs mt-0.5">Revisa los detalles y exporta el PDF</p>
       </div>
 
-      {/* Client info card */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-        <div className="flex items-center gap-2 mb-3">
-          <User size={18} className="text-accent" />
-          <h3 className="font-bold text-primary">Cliente</h3>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
-          <div>
-            <span className="text-gray-400">Nombre</span>
-            <p className="font-semibold text-gray-800">{result.client.name}</p>
+      {/* Client */}
+      <div>
+        <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">Cliente</p>
+        <div className="bg-gray-50 rounded-lg px-4 py-3 text-sm space-y-1">
+          <div className="flex justify-between">
+            <span className="text-gray-500">Nombre</span>
+            <span className="font-medium text-primary">{result.client.name}</span>
           </div>
-          <div>
-            <span className="text-gray-400">Cedula</span>
-            <p className="font-semibold text-gray-800">{result.client.cedula}</p>
+          <div className="flex justify-between">
+            <span className="text-gray-500">Cedula</span>
+            <span className="font-medium text-primary">{result.client.cedula}</span>
           </div>
-          <div>
-            <span className="text-gray-400">Celular</span>
-            <p className="font-semibold text-gray-800">{result.client.phone}</p>
+          <div className="flex justify-between">
+            <span className="text-gray-500">Celular</span>
+            <span className="font-medium text-primary">{result.client.phone}</span>
           </div>
         </div>
       </div>
 
-      {/* Phones comparison */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Smartphone size={18} className="text-highlight" />
-            <h3 className="font-bold text-primary text-sm">Equipo Entregado</h3>
+      {/* Phones */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">Entrega</p>
+          <div className="bg-gray-50 rounded-lg px-3 py-3">
+            <p className="font-semibold text-sm text-primary">{result.tradeIn.model}</p>
+            <p className="text-[11px] text-gray-400 mt-1">IMEI: {result.tradeIn.imei}</p>
+            <p className="text-[11px] text-gray-400">{result.tradeIn.condition}</p>
+            <p className="font-bold text-primary mt-2">{formatCurrency(result.tradeIn.acceptedValue)}</p>
           </div>
-          <p className="font-bold text-lg text-gray-800">{result.tradeIn.model}</p>
-          <p className="text-xs text-gray-400 mt-1">IMEI: {result.tradeIn.imei}</p>
-          <p className="text-xs text-gray-400">Estado: {result.tradeIn.condition}</p>
-          <p className="text-highlight font-bold text-xl mt-2">{formatCurrency(result.tradeIn.acceptedValue)}</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Smartphone size={18} className="text-success" />
-            <h3 className="font-bold text-primary text-sm">Equipo Deseado</h3>
+        <div>
+          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">Desea</p>
+          <div className="bg-gray-50 rounded-lg px-3 py-3">
+            <p className="font-semibold text-sm text-primary">{result.desired.model}</p>
+            <p className="font-bold text-primary mt-8">{formatCurrency(result.desired.price)}</p>
           </div>
-          <p className="font-bold text-lg text-gray-800">{result.desired.model}</p>
-          <p className="text-success font-bold text-xl mt-6">{formatCurrency(result.desired.price)}</p>
         </div>
       </div>
 
       {/* Finance summary */}
-      <div className="bg-gradient-to-r from-primary to-accent rounded-xl p-5 text-white">
-        <div className="flex items-center gap-2 mb-3">
-          <ArrowRightLeft size={18} />
-          <h3 className="font-bold">Resumen de Financiacion</h3>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+      <div className="bg-primary rounded-lg p-4 text-white">
+        <div className="grid grid-cols-2 gap-3 text-xs">
           <div>
-            <span className="opacity-70">Diferencia</span>
-            <p className="font-bold text-xl">{formatCurrency(result.balanceToFinance)}</p>
+            <span className="text-white/50">Diferencia</span>
+            <p className="font-bold text-base">{formatCurrency(result.balanceToFinance)}</p>
           </div>
           <div>
-            <span className="opacity-70">Interes ({(result.interestRate * 100).toFixed(0)}%)</span>
-            <p className="font-bold text-xl">{formatCurrency(result.totalInterest)}</p>
+            <span className="text-white/50">Interes ({(result.interestRate * 100).toFixed(0)}%)</span>
+            <p className="font-bold text-base">{formatCurrency(result.totalInterest)}</p>
           </div>
           <div>
-            <span className="opacity-70">Total a Pagar</span>
-            <p className="font-bold text-xl">{formatCurrency(result.totalWithInterest)}</p>
+            <span className="text-white/50">Total a pagar</span>
+            <p className="font-bold text-base">{formatCurrency(result.totalWithInterest)}</p>
           </div>
           <div>
-            <span className="opacity-70">Cuotas</span>
-            <p className="font-bold text-xl">{result.config.installments} {freqLabel.toLowerCase()}es</p>
+            <span className="text-white/50">Cuotas</span>
+            <p className="font-bold text-base">{result.config.installments} {freqLabel.toLowerCase()}es</p>
           </div>
         </div>
       </div>
 
       {/* Payment schedule */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="flex items-center gap-2 p-5 pb-3">
-          <CalendarDays size={18} className="text-accent" />
-          <h3 className="font-bold text-primary">Calendario de Pagos</h3>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-accent text-white">
-                <th className="px-5 py-3 text-left font-semibold">No.</th>
-                <th className="px-5 py-3 text-left font-semibold">Fecha de Pago</th>
-                <th className="px-5 py-3 text-right font-semibold">Valor Cuota</th>
-                <th className="px-5 py-3 text-right font-semibold">Saldo Pendiente</th>
-              </tr>
-            </thead>
-            <tbody>
-              {result.schedule.map((payment) => (
-                <tr
-                  key={payment.number}
-                  className={`border-b border-gray-50 hover:bg-accent/5 transition-colors ${
-                    payment.number % 2 === 0 ? 'bg-gray-50/50' : ''
-                  }`}
-                >
-                  <td className="px-5 py-3 font-bold text-accent">{payment.number}</td>
-                  <td className="px-5 py-3">
-                    <span className="font-medium text-gray-800">{formatDateShort(payment.date)}</span>
-                    <span className="block text-xs text-gray-400 capitalize">{formatDate(payment.date).split(',')[0]}</span>
-                  </td>
-                  <td className="px-5 py-3 text-right font-bold text-primary">{formatCurrency(payment.amount)}</td>
-                  <td className="px-5 py-3 text-right">
-                    <span
-                      className={`font-semibold ${
-                        payment.remainingBalance === 0 ? 'text-success' : 'text-gray-600'
-                      }`}
-                    >
-                      {payment.remainingBalance === 0 ? 'Pagado' : formatCurrency(payment.remainingBalance)}
-                    </span>
-                  </td>
+      <div>
+        <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-2">Calendario de pagos</p>
+        <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="bg-accent text-white">
+                  <th className="px-3 py-2 text-left font-medium">#</th>
+                  <th className="px-3 py-2 text-left font-medium">Fecha</th>
+                  <th className="px-3 py-2 text-right font-medium">Cuota</th>
+                  <th className="px-3 py-2 text-right font-medium">Saldo</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {result.schedule.map((payment) => (
+                  <tr
+                    key={payment.number}
+                    className={`border-t border-gray-100 ${
+                      payment.number % 2 === 0 ? 'bg-gray-50/50' : ''
+                    }`}
+                  >
+                    <td className="px-3 py-2 font-semibold text-accent">{payment.number}</td>
+                    <td className="px-3 py-2">
+                      <span className="text-gray-800">{formatDateShort(payment.date)}</span>
+                      <span className="block text-[10px] text-gray-400 capitalize">{formatDate(payment.date).split(',')[0]}</span>
+                    </td>
+                    <td className="px-3 py-2 text-right font-semibold text-primary">{formatCurrency(payment.amount)}</td>
+                    <td className="px-3 py-2 text-right">
+                      <span className={`font-medium ${payment.remainingBalance === 0 ? 'text-success' : 'text-gray-500'}`}>
+                        {payment.remainingBalance === 0 ? 'Pagado' : formatCurrency(payment.remainingBalance)}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      {/* Legal note */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-        <div className="flex items-center gap-2 mb-2">
-          <Receipt size={18} className="text-gray-400" />
-          <h3 className="font-bold text-primary text-sm">Nota</h3>
-        </div>
-        <p className="text-xs text-gray-400 leading-relaxed">
-          Este plan de financiacion es generado por Gordotech. Las fechas de pago son aproximadas
-          y comienzan a contar desde la fecha actual. Ambas partes se comprometen a cumplir con los
-          terminos establecidos en este documento.
-        </p>
-      </div>
+      {/* Legal */}
+      <p className="text-[10px] text-gray-400 leading-relaxed">
+        Ambas partes se comprometen a cumplir los terminos de este plan de financiacion.
+        Las fechas son aproximadas a partir de hoy.
+      </p>
 
-      {/* Action buttons */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      {/* Actions */}
+      <div className="flex gap-2">
         <button
           type="button"
           onClick={() => { generatePDF(result); }}
-          className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-accent hover:bg-accent/90 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg shadow-accent/20 hover:shadow-xl cursor-pointer"
+          className="flex-1 py-3 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
         >
-          <FileDown size={20} />
           Exportar PDF
         </button>
         <button
           type="button"
           onClick={onReset}
-          className="flex items-center justify-center gap-2 px-6 py-3.5 border-2 border-gray-200 text-gray-600 rounded-xl font-semibold transition-all duration-200 hover:bg-gray-50 cursor-pointer"
+          className="px-5 py-3 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
         >
-          <RotateCcw size={18} />
-          Nueva Financiacion
+          Nueva
         </button>
       </div>
     </div>
