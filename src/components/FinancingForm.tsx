@@ -61,7 +61,7 @@ export default function FinancingForm({ balance, initialData, onNext, onBack }: 
           >
             <span className="font-bold text-lg block">Mensual</span>
             <span className="text-highlight font-semibold text-sm block mt-1">6% interes</span>
-            <span className="text-xs text-gray-400 block mt-0.5">Hasta 6 cuotas</span>
+            <span className="text-xs text-gray-400 block mt-0.5">Hasta 3 cuotas</span>
           </button>
           <button
             type="button"
@@ -74,7 +74,7 @@ export default function FinancingForm({ balance, initialData, onNext, onBack }: 
           >
             <span className="font-bold text-lg block">Quincenal</span>
             <span className="text-success font-semibold text-sm block mt-1">5% interes</span>
-            <span className="text-xs text-gray-400 block mt-0.5">Hasta 12 cuotas</span>
+            <span className="text-xs text-gray-400 block mt-0.5">Hasta 6 cuotas</span>
           </button>
         </div>
       </div>

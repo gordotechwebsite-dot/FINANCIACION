@@ -14,7 +14,7 @@ const INTEREST_RATES: Record<PaymentFrequency, number> = {
   quincenal: 0.05,
 };
 
-const MAX_MONTHS = 6;
+const MAX_MONTHS = 3;
 
 export function getMaxInstallments(frequency: PaymentFrequency): number {
   return frequency === 'mensual' ? MAX_MONTHS : MAX_MONTHS * 2;
