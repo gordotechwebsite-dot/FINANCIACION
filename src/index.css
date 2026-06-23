@@ -11,13 +11,23 @@
   --color-surface-dark: #f1f5f9;
 }
 
+html {
+  overflow: auto;
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #f0f2f5;
-  min-height: 100vh;
+  min-height: 100%;
+  overflow: auto;
+}
+
+input, select, textarea {
+  font-size: 16px !important;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
