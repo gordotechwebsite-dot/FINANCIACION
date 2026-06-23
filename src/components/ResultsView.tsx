@@ -1,5 +1,5 @@
 import type { FinancingResult } from '../types';
-import { formatCurrency, formatDate, formatDateShort } from '../utils/calculations';
+import { formatCurrency, formatDateShort } from '../utils/calculations';
 import { generatePDF } from '../utils/pdfGenerator';
 
 interface ResultsViewProps {
@@ -8,136 +8,101 @@ interface ResultsViewProps {
 }
 
 export default function ResultsView({ result, onReset }: ResultsViewProps) {
-  const freqLabel = result.config.frequency === 'mensual' ? 'Mensual' : 'Quincenal';
+  const freqLabel = result.config.frequency === 'mensual' ? 'mensual' : 'quincenal';
 
   return (
-    <div className="space-y-5">
-      <div className="mb-2">
-        <h2 className="text-lg font-bold text-primary">Resumen de Financiacion</h2>
-        <p className="text-gray-400 text-xs mt-0.5">Revisa los detalles y exporta el PDF</p>
+    <div className="space-y-4">
+      <h2 className="text-base font-bold text-primary">Plan de Financiacion</h2>
+
+      {/* Client + phones row */}
+      <div className="text-xs space-y-0.5 text-gray-600">
+        <p><span className="text-gray-400">Cliente:</span> {result.client.name} &middot; CC {result.client.cedula} &middot; {result.client.phone}</p>
       </div>
 
-      {/* Client */}
-      <div>
-        <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">Cliente</p>
-        <div className="bg-gray-50 rounded-lg px-4 py-3 text-sm space-y-1">
-          <div className="flex justify-between">
-            <span className="text-gray-500">Nombre</span>
-            <span className="font-medium text-primary">{result.client.name}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500">Cedula</span>
-            <span className="font-medium text-primary">{result.client.cedula}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500">Celular</span>
-            <span className="font-medium text-primary">{result.client.phone}</span>
-          </div>
+      {/* Phones comparison */}
+      <div className="grid grid-cols-2 gap-2">
+        <div className="bg-gray-50 rounded-lg px-3 py-2.5">
+          <p className="text-[10px] text-gray-400 uppercase tracking-wide">Entrega</p>
+          <p className="font-semibold text-sm text-primary mt-0.5">{result.tradeIn.model}</p>
+          <p className="text-[10px] text-gray-400 mt-0.5">{result.tradeIn.condition} &middot; {result.tradeIn.imei}</p>
+          <p className="font-bold text-sm text-primary mt-1">{formatCurrency(result.tradeIn.acceptedValue)}</p>
+        </div>
+        <div className="bg-gray-50 rounded-lg px-3 py-2.5">
+          <p className="text-[10px] text-gray-400 uppercase tracking-wide">Adquiere</p>
+          <p className="font-semibold text-sm text-primary mt-0.5">{result.desired.model}</p>
+          <p className="font-bold text-sm text-primary mt-4">{formatCurrency(result.desired.price)}</p>
         </div>
       </div>
 
-      {/* Phones */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">Entrega</p>
-          <div className="bg-gray-50 rounded-lg px-3 py-3">
-            <p className="font-semibold text-sm text-primary">{result.tradeIn.model}</p>
-            <p className="text-[11px] text-gray-400 mt-1">IMEI: {result.tradeIn.imei}</p>
-            <p className="text-[11px] text-gray-400">{result.tradeIn.condition}</p>
-            <p className="font-bold text-primary mt-2">{formatCurrency(result.tradeIn.acceptedValue)}</p>
-          </div>
+      {/* Key numbers */}
+      <div className="bg-primary rounded-lg p-3">
+        <div className="flex justify-between items-center text-white mb-2">
+          <span className="text-white/50 text-xs">Financiar</span>
+          <span className="font-bold text-lg">{formatCurrency(result.balanceToFinance)}</span>
         </div>
-        <div>
-          <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">Desea</p>
-          <div className="bg-gray-50 rounded-lg px-3 py-3">
-            <p className="font-semibold text-sm text-primary">{result.desired.model}</p>
-            <p className="font-bold text-primary mt-8">{formatCurrency(result.desired.price)}</p>
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="bg-white/10 rounded px-2 py-1.5">
+            <p className="text-white/50 text-[9px]">Interes {(result.interestRate * 100).toFixed(0)}%</p>
+            <p className="text-white font-bold text-xs">{formatCurrency(result.totalInterest)}</p>
           </div>
-        </div>
-      </div>
-
-      {/* Finance summary */}
-      <div className="bg-primary rounded-lg p-4 text-white">
-        <div className="grid grid-cols-2 gap-3 text-xs">
-          <div>
-            <span className="text-white/50">Diferencia</span>
-            <p className="font-bold text-base">{formatCurrency(result.balanceToFinance)}</p>
+          <div className="bg-white/10 rounded px-2 py-1.5">
+            <p className="text-white/50 text-[9px]">Total</p>
+            <p className="text-white font-bold text-xs">{formatCurrency(result.totalWithInterest)}</p>
           </div>
-          <div>
-            <span className="text-white/50">Interes ({(result.interestRate * 100).toFixed(0)}%)</span>
-            <p className="font-bold text-base">{formatCurrency(result.totalInterest)}</p>
-          </div>
-          <div>
-            <span className="text-white/50">Total a pagar</span>
-            <p className="font-bold text-base">{formatCurrency(result.totalWithInterest)}</p>
-          </div>
-          <div>
-            <span className="text-white/50">Cuotas</span>
-            <p className="font-bold text-base">{result.config.installments} {freqLabel.toLowerCase()}es</p>
+          <div className="bg-white/10 rounded px-2 py-1.5">
+            <p className="text-white/50 text-[9px]">Cuotas</p>
+            <p className="text-white font-bold text-xs">{result.config.installments} {freqLabel}es</p>
           </div>
         </div>
       </div>
 
       {/* Payment schedule */}
       <div>
-        <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-2">Calendario de pagos</p>
+        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">Plan de pagos</p>
         <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="bg-accent text-white">
-                  <th className="px-3 py-2 text-left font-medium">#</th>
-                  <th className="px-3 py-2 text-left font-medium">Fecha</th>
-                  <th className="px-3 py-2 text-right font-medium">Cuota</th>
-                  <th className="px-3 py-2 text-right font-medium">Saldo</th>
+          <table className="w-full text-[11px]">
+            <thead>
+              <tr className="bg-accent text-white">
+                <th className="px-2 py-1.5 text-left font-medium w-8">#</th>
+                <th className="px-2 py-1.5 text-left font-medium">Fecha</th>
+                <th className="px-2 py-1.5 text-right font-medium">Cuota</th>
+                <th className="px-2 py-1.5 text-right font-medium">Saldo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.schedule.map((payment) => (
+                <tr
+                  key={payment.number}
+                  className={payment.number % 2 === 0 ? 'bg-gray-50/60' : ''}
+                >
+                  <td className="px-2 py-1.5 font-semibold text-accent">{payment.number}</td>
+                  <td className="px-2 py-1.5 text-gray-700">{formatDateShort(payment.date)}</td>
+                  <td className="px-2 py-1.5 text-right font-semibold text-primary">{formatCurrency(payment.amount)}</td>
+                  <td className="px-2 py-1.5 text-right">
+                    <span className={payment.remainingBalance === 0 ? 'font-semibold text-success' : 'text-gray-500'}>
+                      {payment.remainingBalance === 0 ? 'Pagado' : formatCurrency(payment.remainingBalance)}
+                    </span>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {result.schedule.map((payment) => (
-                  <tr
-                    key={payment.number}
-                    className={`border-t border-gray-100 ${
-                      payment.number % 2 === 0 ? 'bg-gray-50/50' : ''
-                    }`}
-                  >
-                    <td className="px-3 py-2 font-semibold text-accent">{payment.number}</td>
-                    <td className="px-3 py-2">
-                      <span className="text-gray-800">{formatDateShort(payment.date)}</span>
-                      <span className="block text-[10px] text-gray-400 capitalize">{formatDate(payment.date).split(',')[0]}</span>
-                    </td>
-                    <td className="px-3 py-2 text-right font-semibold text-primary">{formatCurrency(payment.amount)}</td>
-                    <td className="px-3 py-2 text-right">
-                      <span className={`font-medium ${payment.remainingBalance === 0 ? 'text-success' : 'text-gray-500'}`}>
-                        {payment.remainingBalance === 0 ? 'Pagado' : formatCurrency(payment.remainingBalance)}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* Legal */}
-      <p className="text-[10px] text-gray-400 leading-relaxed">
-        Ambas partes se comprometen a cumplir los terminos de este plan de financiacion.
-        Las fechas son aproximadas a partir de hoy.
-      </p>
-
       {/* Actions */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 pt-1">
         <button
           type="button"
           onClick={() => { generatePDF(result); }}
-          className="flex-1 py-3 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
+          className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
         >
           Exportar PDF
         </button>
         <button
           type="button"
           onClick={onReset}
-          className="px-5 py-3 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
+          className="px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
         >
           Nueva
         </button>
