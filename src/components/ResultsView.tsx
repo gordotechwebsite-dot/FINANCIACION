@@ -14,8 +14,8 @@ export default function ResultsView({ result, onBack, onReset }: ResultsViewProp
   const freqLabel = result.config.frequency === 'mensual' ? 'mensual' : 'quincenal';
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-base font-bold text-primary">
+    <div className="space-y-4 sm:space-y-5">
+      <h2 className="text-base sm:text-xl font-bold text-primary">
         {confirmed ? 'Plan de Financiacion' : 'Confirmar Datos'}
       </h2>
 
@@ -24,27 +24,27 @@ export default function ResultsView({ result, onBack, onReset }: ResultsViewProp
       )}
 
       {/* Client */}
-      <div className="text-xs space-y-0.5 text-gray-600">
+      <div className="text-xs sm:text-sm space-y-0.5 text-gray-600">
         <p><span className="text-gray-400">Cliente:</span> {result.client.name} &middot; CC {result.client.cedula} &middot; {result.client.phone}</p>
       </div>
 
       {/* Phones comparison */}
-      <div className="grid grid-cols-2 gap-2">
-        <div className="bg-gray-50 rounded-lg px-3 py-2.5">
-          <p className="text-[10px] text-gray-400 uppercase tracking-wide">Entrega</p>
-          <p className="font-semibold text-sm text-primary mt-0.5">{result.tradeIn.model}</p>
-          <p className="text-[10px] text-gray-400 mt-0.5">{result.tradeIn.condition} &middot; {result.tradeIn.imei}</p>
-          <p className="font-bold text-sm text-primary mt-1">{formatCurrency(result.tradeIn.acceptedValue)}</p>
+      <div className="grid grid-cols-2 gap-2 sm:gap-4">
+        <div className="bg-gray-50 rounded-lg px-3 py-2.5 sm:px-4 sm:py-4">
+          <p className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Entrega</p>
+          <p className="font-semibold text-sm sm:text-base text-primary mt-0.5">{result.tradeIn.model}</p>
+          <p className="text-[10px] sm:text-xs text-gray-400 mt-0.5">{result.tradeIn.condition} &middot; {result.tradeIn.imei}</p>
+          <p className="font-bold text-sm sm:text-base text-primary mt-1">{formatCurrency(result.tradeIn.acceptedValue)}</p>
         </div>
-        <div className="bg-gray-50 rounded-lg px-3 py-2.5">
-          <p className="text-[10px] text-gray-400 uppercase tracking-wide">Adquiere</p>
-          <p className="font-semibold text-sm text-primary mt-0.5">{result.desired.model}</p>
-          <p className="font-bold text-sm text-primary mt-4">{formatCurrency(result.desired.price)}</p>
+        <div className="bg-gray-50 rounded-lg px-3 py-2.5 sm:px-4 sm:py-4">
+          <p className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Adquiere</p>
+          <p className="font-semibold text-sm sm:text-base text-primary mt-0.5">{result.desired.model}</p>
+          <p className="font-bold text-sm sm:text-base text-primary mt-4">{formatCurrency(result.desired.price)}</p>
         </div>
       </div>
 
       {/* Key numbers */}
-      <div className="bg-primary rounded-lg p-3">
+      <div className="bg-primary rounded-lg p-3 sm:p-4">
         <div className="flex justify-between items-center text-white mb-2">
           <span className="text-white/50 text-xs">Financiar</span>
           <span className="font-bold text-lg">{formatCurrency(result.balanceToFinance)}</span>
@@ -69,13 +69,13 @@ export default function ResultsView({ result, onBack, onReset }: ResultsViewProp
       <div>
         <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1.5">Plan de pagos</p>
         <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <table className="w-full text-[11px]">
+          <table className="w-full text-[11px] sm:text-sm">
             <thead>
               <tr className="bg-accent text-white">
-                <th className="px-2 py-1.5 text-left font-medium w-8">#</th>
-                <th className="px-2 py-1.5 text-left font-medium">Fecha</th>
-                <th className="px-2 py-1.5 text-right font-medium">Cuota</th>
-                <th className="px-2 py-1.5 text-right font-medium">Saldo</th>
+                <th className="px-2 py-1.5 sm:px-3 sm:py-2 text-left font-medium w-8">#</th>
+                <th className="px-2 py-1.5 sm:px-3 sm:py-2 text-left font-medium">Fecha</th>
+                <th className="px-2 py-1.5 sm:px-3 sm:py-2 text-right font-medium">Cuota</th>
+                <th className="px-2 py-1.5 sm:px-3 sm:py-2 text-right font-medium">Saldo</th>
               </tr>
             </thead>
             <tbody>
@@ -101,35 +101,35 @@ export default function ResultsView({ result, onBack, onReset }: ResultsViewProp
 
       {/* Actions */}
       {!confirmed ? (
-        <div className="flex gap-2 pt-1">
+        <div className="flex gap-2 sm:gap-3 pt-1 sm:pt-3">
           <button
             type="button"
             onClick={onBack}
-            className="px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
+            className="px-4 py-2.5 sm:py-3 border border-gray-300 text-gray-600 rounded-lg text-sm sm:text-base font-medium transition-colors hover:bg-gray-50 cursor-pointer"
           >
             Atras
           </button>
           <button
             type="button"
             onClick={() => setConfirmed(true)}
-            className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
+            className="flex-1 py-2.5 sm:py-3 bg-accent text-white rounded-lg font-semibold text-sm sm:text-base transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
           >
             Confirmar
           </button>
         </div>
       ) : (
-        <div className="flex gap-2 pt-1">
+        <div className="flex gap-2 sm:gap-3 pt-1 sm:pt-3">
           <button
             type="button"
             onClick={() => { generatePDF(result); }}
-            className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
+            className="flex-1 py-2.5 sm:py-3 bg-accent text-white rounded-lg font-semibold text-sm sm:text-base transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
           >
             Exportar PDF
           </button>
           <button
             type="button"
             onClick={onReset}
-            className="px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
+            className="px-4 py-2.5 sm:py-3 border border-gray-300 text-gray-600 rounded-lg text-sm sm:text-base font-medium transition-colors hover:bg-gray-50 cursor-pointer"
           >
             Nueva
           </button>
