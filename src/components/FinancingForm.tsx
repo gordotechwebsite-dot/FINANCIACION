@@ -116,7 +116,7 @@ export default function FinancingForm({ balance, initialData, onNext, onBack }: 
           type="submit"
           className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
         >
-          Ver calendario
+          Ver plan de pagos
         </button>
       </div>
     </form>

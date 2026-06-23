@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { DesiredPhone, TradeInPhone } from '../types';
-import { formatCurrency } from '../utils/calculations';
+import { formatCurrency, formatNumberWithDots, parseNumberFromDots } from '../utils/calculations';
 
 interface DesiredPhoneFormProps {
   initialData: DesiredPhone;
@@ -56,11 +56,11 @@ export default function DesiredPhoneForm({ initialData, tradeIn, onNext, onBack 
       <div>
         <label className="text-[11px] font-medium text-gray-500 mb-0.5 block">Precio (COP)</label>
         <input
-          type="number"
-          value={data.price || ''}
-          onChange={(e) => setData({ ...data, price: Number(e.target.value) })}
-          placeholder="3500000"
-          min={0}
+          type="text"
+          inputMode="numeric"
+          value={formatNumberWithDots(data.price)}
+          onChange={(e) => setData({ ...data, price: parseNumberFromDots(e.target.value) })}
+          placeholder="3.500.000"
           className={`w-full px-3 py-2 rounded-lg border outline-none transition-colors ${
             errors.price ? 'border-highlight bg-red-50/50' : 'border-gray-300 focus:border-accent'
           }`}
