@@ -115,6 +115,12 @@ export default function App() {
               <ResultsView result={result} onReset={handleReset} />
             )}
           </div>
+
+          <footer className="text-center mt-3 pb-3">
+            <a href="https://gordotech.co" target="_blank" rel="noopener noreferrer" className="text-[11px] text-gray-400 hover:text-accent transition-colors">
+              gordotech.co
+            </a>
+          </footer>
         </div>
       </main>
     </div>
