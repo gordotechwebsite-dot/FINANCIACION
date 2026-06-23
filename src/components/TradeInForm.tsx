@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Smartphone, Hash, Star, DollarSign, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import type { TradeInPhone, PhoneCondition } from '../types';
 
 interface TradeInFormProps {
@@ -41,8 +41,7 @@ export default function TradeInForm({ initialData, onNext, onBack }: TradeInForm
 
       <div className="space-y-4">
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <Hash size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
             IMEI del Equipo
           </label>
           <input
@@ -61,8 +60,7 @@ export default function TradeInForm({ initialData, onNext, onBack }: TradeInForm
         </div>
 
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <Smartphone size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
             Modelo del Equipo
           </label>
           <input
@@ -80,8 +78,7 @@ export default function TradeInForm({ initialData, onNext, onBack }: TradeInForm
         </div>
 
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-            <Star size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-2 block">
             Estado del Equipo
           </label>
           <div className="grid grid-cols-3 gap-3">
@@ -104,8 +101,7 @@ export default function TradeInForm({ initialData, onNext, onBack }: TradeInForm
         </div>
 
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <DollarSign size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
             Valor Aceptado del Equipo (COP)
           </label>
           <input

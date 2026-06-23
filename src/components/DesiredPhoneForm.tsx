@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Smartphone, DollarSign, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import type { DesiredPhone, TradeInPhone } from '../types';
 import { formatCurrency } from '../utils/calculations';
 
@@ -47,8 +47,7 @@ export default function DesiredPhoneForm({ initialData, tradeIn, onNext, onBack 
 
       <div className="space-y-4">
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <Smartphone size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
             Modelo del Equipo Deseado
           </label>
           <input
@@ -66,8 +65,7 @@ export default function DesiredPhoneForm({ initialData, tradeIn, onNext, onBack 
         </div>
 
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <DollarSign size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
             Precio del Equipo (COP)
           </label>
           <input

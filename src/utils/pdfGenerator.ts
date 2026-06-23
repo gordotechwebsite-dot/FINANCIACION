@@ -2,29 +2,64 @@ import jsPDF from 'jspdf';
 import type { FinancingResult } from '../types';
 import { formatCurrency, formatDateShort } from './calculations';
 
-export function generatePDF(result: FinancingResult): void {
+function loadImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+function imageToBase64(img: HTMLImageElement): string {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return '';
+  ctx.drawImage(img, 0, 0);
+  return canvas.toDataURL('image/png');
+}
+
+export async function generatePDF(result: FinancingResult): Promise<void> {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const margin = 20;
   let y = 20;
 
+  // Load logo
+  let logoBase64 = '';
+  try {
+    const logoUrl = new URL('/logo-gordotech-white.png', import.meta.url).href;
+    const img = await loadImage(logoUrl);
+    logoBase64 = imageToBase64(img);
+  } catch {
+    // If logo fails to load, continue without it
+  }
+
   // Header background
   doc.setFillColor(26, 26, 46);
   doc.rect(0, 0, pageWidth, 50, 'F');
 
-  // Company name
+  // Logo in header
+  if (logoBase64) {
+    doc.addImage(logoBase64, 'PNG', pageWidth / 2 - 45, 5, 12, 12);
+  }
+
+  // Company name (offset right if logo present)
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
-  doc.text('GORDOTECH', pageWidth / 2, 22, { align: 'center' });
+  doc.text('GORDOTECH', pageWidth / 2 + (logoBase64 ? 3 : 0), 15, { align: 'center' });
 
   doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  doc.text('Comercio Tecnologico - Plan de Financiacion', pageWidth / 2, 32, { align: 'center' });
+  doc.text('Comercio Tecnologico - Plan de Financiacion', pageWidth / 2, 26, { align: 'center' });
 
   const today = new Date();
   doc.setFontSize(9);
-  doc.text(`Fecha: ${formatDateShort(today)}`, pageWidth / 2, 42, { align: 'center' });
+  doc.text(`Fecha: ${formatDateShort(today)}`, pageWidth / 2, 36, { align: 'center' });
 
   y = 62;
   doc.setTextColor(26, 26, 46);

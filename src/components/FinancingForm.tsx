@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, ChevronLeft, Calculator } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import type { FinancingConfig, PaymentFrequency } from '../types';
 import { getMaxInstallments, getInterestRate, formatCurrency } from '../utils/calculations';
 
@@ -45,8 +45,7 @@ export default function FinancingForm({ balance, initialData, onNext, onBack }: 
       </div>
 
       <div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-          <Calendar size={16} className="text-accent" />
+        <label className="text-sm font-semibold text-gray-700 mb-2 block">
           Frecuencia de Pago
         </label>
         <div className="grid grid-cols-2 gap-3">
@@ -80,8 +79,7 @@ export default function FinancingForm({ balance, initialData, onNext, onBack }: 
       </div>
 
       <div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-          <Calculator size={16} className="text-accent" />
+        <label className="text-sm font-semibold text-gray-700 mb-2 block">
           Numero de Cuotas: <span className="text-accent text-lg">{data.installments}</span>
         </label>
         <input

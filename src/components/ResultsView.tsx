@@ -151,7 +151,7 @@ export default function ResultsView({ result, onReset }: ResultsViewProps) {
       <div className="flex flex-col sm:flex-row gap-3">
         <button
           type="button"
-          onClick={() => generatePDF(result)}
+          onClick={() => { generatePDF(result); }}
           className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-accent hover:bg-accent/90 text-white rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg shadow-accent/20 hover:shadow-xl cursor-pointer"
         >
           <FileDown size={20} />

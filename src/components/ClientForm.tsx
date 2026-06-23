@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { User, CreditCard, Phone } from 'lucide-react';
 import type { ClientData } from '../types';
 
 interface ClientFormProps {
@@ -34,8 +33,7 @@ export default function ClientForm({ initialData, onNext }: ClientFormProps) {
 
       <div className="space-y-4">
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <User size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
             Nombre Completo
           </label>
           <input
@@ -53,8 +51,7 @@ export default function ClientForm({ initialData, onNext }: ClientFormProps) {
         </div>
 
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <CreditCard size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
             Cedula de Ciudadania
           </label>
           <input
@@ -72,8 +69,7 @@ export default function ClientForm({ initialData, onNext }: ClientFormProps) {
         </div>
 
         <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
-            <Phone size={16} className="text-accent" />
+          <label className="text-sm font-semibold text-gray-700 mb-1 block">
             Numero de Celular
           </label>
           <input
