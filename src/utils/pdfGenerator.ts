@@ -26,7 +26,7 @@ const PRIMARY = [26, 26, 46] as const;
 const ACCENT = [15, 52, 96] as const;
 const GRAY_TEXT = [100, 100, 100] as const;
 const LIGHT_BG = [245, 247, 250] as const;
-const WHITE = [255, 255, 255] as const;
+const BORDER = [200, 200, 200] as const;
 
 export async function generatePDF(result: FinancingResult): Promise<void> {
   const doc = new jsPDF();
@@ -38,7 +38,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
 
   let logoBase64 = '';
   try {
-    const logoUrl = new URL('/logo-gordotech-white.png', import.meta.url).href;
+    const logoUrl = new URL('/logo-gordotech.png', import.meta.url).href;
     const img = await loadImage(logoUrl);
     logoBase64 = imageToBase64(img);
   } catch {
@@ -48,33 +48,35 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   const today = new Date();
   const freqLabel = result.config.frequency === 'mensual' ? 'Mensual' : 'Quincenal';
 
-  // ── HEADER ──
-  doc.setFillColor(...PRIMARY);
-  doc.rect(0, 0, pw, 40, 'F');
+  // ── HEADER (white background) ──
+  y = 12;
 
   if (logoBase64) {
-    doc.addImage(logoBase64, 'PNG', m, 8, 24, 24);
+    doc.addImage(logoBase64, 'PNG', m, y - 4, 20, 20);
   }
 
-  const textX = logoBase64 ? m + 30 : m;
-  doc.setTextColor(...WHITE);
+  const textX = logoBase64 ? m + 26 : m;
+  doc.setTextColor(...PRIMARY);
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  doc.text('GORDOTECH', textX, 20);
+  doc.text('GORDOTECH', textX, y + 6);
 
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text('Conectando tus suenos', textX, 27);
+  doc.setTextColor(...GRAY_TEXT);
+  doc.text('Conectando tus suenos', textX, y + 13);
 
   doc.setFontSize(8);
-  doc.setTextColor(180, 180, 200);
-  doc.text(`Documento generado el ${formatDateShort(today)}`, pw - m, 34, { align: 'right' });
+  doc.setTextColor(...GRAY_TEXT);
+  doc.text(`Documento generado el ${formatDateShort(today)}`, pw - m, y + 6, { align: 'right' });
 
-  // Accent stripe
-  doc.setFillColor(...ACCENT);
-  doc.rect(0, 40, pw, 3, 'F');
+  // Thin separator line
+  y += 22;
+  doc.setDrawColor(...BORDER);
+  doc.setLineWidth(0.5);
+  doc.line(m, y, pw - m, y);
 
-  y = 52;
+  y += 10;
 
   // ── TITLE ──
   doc.setTextColor(...PRIMARY);
@@ -83,7 +85,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   doc.text('Plan de Financiacion', m, y);
   y += 10;
 
-  // ── CLIENT INFO (inline) ──
+  // ── CLIENT INFO ──
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...GRAY_TEXT);
@@ -94,8 +96,9 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   const halfW = (contentW - 6) / 2;
 
   // Left: Trade-in
-  doc.setFillColor(...LIGHT_BG);
-  doc.roundedRect(m, y, halfW, 42, 2, 2, 'F');
+  doc.setDrawColor(...BORDER);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(m, y, halfW, 42, 2, 2, 'S');
 
   doc.setTextColor(...GRAY_TEXT);
   doc.setFontSize(7);
@@ -120,8 +123,8 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
 
   // Right: Desired
   const rx = m + halfW + 6;
-  doc.setFillColor(...LIGHT_BG);
-  doc.roundedRect(rx, y, halfW, 42, 2, 2, 'F');
+  doc.setDrawColor(...BORDER);
+  doc.roundedRect(rx, y, halfW, 42, 2, 2, 'S');
 
   doc.setTextColor(...GRAY_TEXT);
   doc.setFontSize(7);
@@ -140,39 +143,39 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
 
   y += 50;
 
-  // ── FINANCING SUMMARY (dark box) ──
-  doc.setFillColor(...PRIMARY);
-  doc.roundedRect(m, y, contentW, 36, 2, 2, 'F');
+  // ── FINANCING SUMMARY (light border box, no interest info) ──
+  doc.setDrawColor(...BORDER);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(m, y, contentW, 30, 2, 2, 'S');
 
-  const colW = contentW / 4;
-  const labels = ['Diferencia', `Interes (${(result.interestRate * 100).toFixed(0)}%)`, 'Total a pagar', 'Cuotas'];
+  const colW = contentW / 3;
+  const labels = ['Saldo a Financiar', 'Total a Pagar', 'Cuotas'];
   const values = [
     formatCurrency(result.balanceToFinance),
-    formatCurrency(result.totalInterest),
     formatCurrency(result.totalWithInterest),
     `${result.config.installments} ${freqLabel.toLowerCase()}es`,
   ];
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     const cx = m + colW * i + colW / 2;
 
-    doc.setTextColor(180, 180, 200);
+    doc.setTextColor(...GRAY_TEXT);
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
-    doc.text(labels[i], cx, y + 12, { align: 'center' });
+    doc.text(labels[i], cx, y + 10, { align: 'center' });
 
-    doc.setTextColor(...WHITE);
-    doc.setFontSize(10);
+    doc.setTextColor(...PRIMARY);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text(values[i], cx, y + 22, { align: 'center' });
+    doc.text(values[i], cx, y + 20, { align: 'center' });
 
-    if (i < 3) {
-      doc.setDrawColor(60, 60, 80);
-      doc.line(m + colW * (i + 1), y + 6, m + colW * (i + 1), y + 30);
+    if (i < 2) {
+      doc.setDrawColor(...BORDER);
+      doc.line(m + colW * (i + 1), y + 4, m + colW * (i + 1), y + 26);
     }
   }
 
-  y += 44;
+  y += 38;
 
   // ── PAYMENT SCHEDULE TABLE ──
   doc.setTextColor(...PRIMARY);
@@ -181,7 +184,6 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   doc.text('Plan de Pagos', m, y);
   y += 7;
 
-  // Table columns
   const col1 = m + 4;
   const col2 = m + 20;
   const col3 = m + contentW - 70;
@@ -189,9 +191,9 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   const rowH = 8;
 
   // Header row
-  doc.setFillColor(...ACCENT);
+  doc.setFillColor(...LIGHT_BG);
   doc.roundedRect(m, y, contentW, rowH, 1.5, 1.5, 'F');
-  doc.setTextColor(...WHITE);
+  doc.setTextColor(...PRIMARY);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'bold');
   doc.text('#', col1, y + 5.5);
@@ -239,7 +241,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   }
 
   // Bottom line under table
-  doc.setDrawColor(200, 200, 200);
+  doc.setDrawColor(...BORDER);
   doc.line(m, y, m + contentW, y);
 
   // ── SIGNATURES ──
@@ -269,16 +271,17 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   doc.text(result.client.name, sigLeft + sigW / 2, y + 10, { align: 'center' });
   doc.text(`CC ${result.client.cedula}`, sigLeft + sigW / 2, y + 14, { align: 'center' });
 
-  // ── FOOTER ──
+  // ── FOOTER (thin line + text, no dark background) ──
   const totalPages = doc.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
-    doc.setFillColor(...PRIMARY);
-    doc.rect(0, ph - 14, pw, 14, 'F');
-    doc.setTextColor(180, 180, 200);
+    doc.setDrawColor(...BORDER);
+    doc.setLineWidth(0.3);
+    doc.line(m, ph - 14, pw - m, ph - 14);
+    doc.setTextColor(...GRAY_TEXT);
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
-    doc.text('Gordotech - Conectando tus suenos | gordotech.co | Este documento constituye un acuerdo de financiacion', pw / 2, ph - 6, { align: 'center' });
+    doc.text('Gordotech - Conectando tus suenos | gordotech.co | Este documento constituye un acuerdo de financiacion', pw / 2, ph - 8, { align: 'center' });
   }
 
   const clientName = result.client.name.replace(/\s+/g, '_');
