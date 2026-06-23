@@ -71,20 +71,20 @@ export default function App() {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <header className="bg-primary shrink-0">
-        <div className="max-w-lg mx-auto px-4 pt-2 pb-1.5 flex items-center justify-center gap-2.5">
-          <img src={logoGordotech} alt="Gordotech" className="h-7 w-7 object-contain" />
-          <h1 className="text-white text-sm font-bold tracking-wide">GORDOTECH</h1>
+        <div className="max-w-lg sm:max-w-2xl mx-auto px-4 pt-2 sm:pt-3 pb-1.5 sm:pb-2 flex items-center justify-center gap-2.5 sm:gap-3">
+          <img src={logoGordotech} alt="Gordotech" className="h-7 w-7 sm:h-9 sm:w-9 object-contain" />
+          <h1 className="text-white text-sm sm:text-lg font-bold tracking-wide">GORDOTECH</h1>
         </div>
         {step < 5 && (
-          <div className="max-w-lg mx-auto px-4 pb-2">
+          <div className="max-w-lg sm:max-w-2xl mx-auto px-4 pb-2">
             <StepIndicator currentStep={step} totalSteps={5} labels={STEP_LABELS} />
           </div>
         )}
       </header>
 
       <main ref={contentRef} className="flex-1 overflow-y-auto overscroll-none">
-        <div className="max-w-lg mx-auto px-3 py-3">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200/60 p-4">
+        <div className="max-w-lg sm:max-w-2xl mx-auto px-3 sm:px-6 py-3 sm:py-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200/60 p-4 sm:p-8">
             {step === 1 && (
               <ClientForm initialData={client} onNext={handleClientNext} />
             )}
@@ -116,8 +116,8 @@ export default function App() {
             )}
           </div>
 
-          <footer className="text-center mt-3 pb-3">
-            <a href="https://gordotech.co" target="_blank" rel="noopener noreferrer" className="text-[11px] text-gray-400 hover:text-accent transition-colors">
+          <footer className="text-center mt-3 sm:mt-5 pb-3">
+            <a href="https://gordotech.co" target="_blank" rel="noopener noreferrer" className="text-[11px] sm:text-xs text-gray-400 hover:text-accent transition-colors">
               gordotech.co
             </a>
           </footer>
