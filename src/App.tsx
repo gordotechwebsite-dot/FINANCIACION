@@ -112,7 +112,7 @@ export default function App() {
               />
             )}
             {step === 5 && result && (
-              <ResultsView result={result} onReset={handleReset} />
+              <ResultsView result={result} onBack={() => setStep(4)} onReset={handleReset} />
             )}
           </div>
 
