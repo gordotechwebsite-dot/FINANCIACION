@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StepIndicator from './components/StepIndicator';
 import ClientForm from './components/ClientForm';
 import TradeInForm from './components/TradeInForm';
@@ -29,6 +29,10 @@ export default function App() {
   const [desired, setDesired] = useState<DesiredPhone>(INITIAL_DESIRED);
   const [financing, setFinancing] = useState<FinancingConfig>(INITIAL_FINANCING);
   const [result, setResult] = useState<FinancingResult | null>(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [step]);
 
   function handleClientNext(data: ClientData) {
     setClient(data);
