@@ -32,49 +32,46 @@ export default function DesiredPhoneForm({ initialData, tradeIn, onNext, onBack 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="mb-4">
-        <h2 className="text-lg font-bold text-primary">Equipo Deseado</h2>
-        <p className="text-gray-400 text-xs mt-0.5">Equipo que quiere el cliente</p>
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <h2 className="text-base font-bold text-primary mb-3">Equipo Deseado</h2>
 
-      <div className="bg-gray-50 rounded-lg px-3 py-2.5 text-xs text-gray-600">
-        Valor trade-in: <span className="font-semibold text-primary">{formatCurrency(tradeIn.acceptedValue)}</span>
+      <div className="bg-gray-50 rounded-lg px-3 py-2 text-xs text-gray-600">
+        Trade-in: <span className="font-semibold text-primary">{formatCurrency(tradeIn.acceptedValue)}</span>
       </div>
 
       <div>
-        <label className="text-xs font-medium text-gray-500 mb-1 block">Modelo</label>
+        <label className="text-[11px] font-medium text-gray-500 mb-0.5 block">Modelo</label>
         <input
           type="text"
           value={data.model}
           onChange={(e) => setData({ ...data, model: e.target.value })}
           placeholder="iPhone 15 Pro Max"
-          className={`w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-colors ${
+          className={`w-full px-3 py-2 rounded-lg border outline-none transition-colors ${
             errors.model ? 'border-highlight bg-red-50/50' : 'border-gray-300 focus:border-accent'
           }`}
         />
-        {errors.model && <p className="text-highlight text-[11px] mt-1">{errors.model}</p>}
+        {errors.model && <p className="text-highlight text-[11px] mt-0.5">{errors.model}</p>}
       </div>
 
       <div>
-        <label className="text-xs font-medium text-gray-500 mb-1 block">Precio (COP)</label>
+        <label className="text-[11px] font-medium text-gray-500 mb-0.5 block">Precio (COP)</label>
         <input
           type="number"
           value={data.price || ''}
           onChange={(e) => setData({ ...data, price: Number(e.target.value) })}
           placeholder="3500000"
           min={0}
-          className={`w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-colors ${
+          className={`w-full px-3 py-2 rounded-lg border outline-none transition-colors ${
             errors.price ? 'border-highlight bg-red-50/50' : 'border-gray-300 focus:border-accent'
           }`}
         />
-        {errors.price && <p className="text-highlight text-[11px] mt-1">{errors.price}</p>}
+        {errors.price && <p className="text-highlight text-[11px] mt-0.5">{errors.price}</p>}
       </div>
 
       {balancePreview > 0 && (
-        <div className="bg-primary rounded-lg px-4 py-3 text-center">
-          <p className="text-white/60 text-[11px]">Saldo a financiar</p>
-          <p className="text-white text-xl font-bold">{formatCurrency(balancePreview)}</p>
+        <div className="bg-primary rounded-lg px-3 py-2.5 text-center">
+          <p className="text-white/60 text-[10px]">Saldo a financiar</p>
+          <p className="text-white text-lg font-bold">{formatCurrency(balancePreview)}</p>
         </div>
       )}
 
@@ -82,13 +79,13 @@ export default function DesiredPhoneForm({ initialData, tradeIn, onNext, onBack 
         <button
           type="button"
           onClick={onBack}
-          className="px-5 py-3 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
+          className="px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
         >
           Atras
         </button>
         <button
           type="submit"
-          className="flex-1 py-3 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
+          className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
         >
           Continuar
         </button>

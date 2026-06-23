@@ -6,19 +6,19 @@ interface StepIndicatorProps {
 
 export default function StepIndicator({ currentStep, totalSteps, labels }: StepIndicatorProps) {
   return (
-    <div className="mb-5">
-      <div className="flex items-center gap-1 mb-2">
+    <div>
+      <div className="flex items-center gap-1 mb-1">
         {Array.from({ length: totalSteps }, (_, i) => (
           <div
             key={i}
-            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-              i + 1 <= currentStep ? 'bg-accent' : 'bg-gray-300'
+            className={`h-[3px] flex-1 rounded-full transition-all duration-300 ${
+              i + 1 <= currentStep ? 'bg-white' : 'bg-white/20'
             }`}
           />
         ))}
       </div>
-      <p className="text-xs text-gray-500">
-        Paso {currentStep} de {totalSteps} — <span className="font-medium text-primary">{labels[currentStep - 1]}</span>
+      <p className="text-[10px] text-white/60">
+        {currentStep}/{totalSteps} — <span className="text-white/90">{labels[currentStep - 1]}</span>
       </p>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import StepIndicator from './components/StepIndicator';
 import ClientForm from './components/ClientForm';
 import TradeInForm from './components/TradeInForm';
@@ -29,9 +29,12 @@ export default function App() {
   const [desired, setDesired] = useState<DesiredPhone>(INITIAL_DESIRED);
   const [financing, setFinancing] = useState<FinancingConfig>(INITIAL_FINANCING);
   const [result, setResult] = useState<FinancingResult | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
   }, [step]);
 
   function handleClientNext(data: ClientData) {
@@ -66,61 +69,53 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-primary shadow-md">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-center gap-3">
-          <img
-            src={logoGordotech}
-            alt="Gordotech"
-            className="h-9 w-9 object-contain"
-          />
-          <div>
-            <h1 className="text-white text-lg font-bold leading-tight">GORDOTECH</h1>
-            <p className="text-white/50 text-[10px] tracking-wider uppercase">Financiacion</p>
-          </div>
+    <div className="h-full flex flex-col overflow-hidden">
+      <header className="bg-primary shrink-0">
+        <div className="max-w-lg mx-auto px-4 pt-2 pb-1.5 flex items-center justify-center gap-2.5">
+          <img src={logoGordotech} alt="Gordotech" className="h-7 w-7 object-contain" />
+          <h1 className="text-white text-sm font-bold tracking-wide">GORDOTECH</h1>
         </div>
+        {step < 5 && (
+          <div className="max-w-lg mx-auto px-4 pb-2">
+            <StepIndicator currentStep={step} totalSteps={5} labels={STEP_LABELS} />
+          </div>
+        )}
       </header>
 
-      <main className="flex-1 w-full max-w-lg mx-auto px-4 py-5">
-        {step < 5 && (
-          <StepIndicator currentStep={step} totalSteps={5} labels={STEP_LABELS} />
-        )}
-
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200/60 p-5 sm:p-6">
-          {step === 1 && (
-            <ClientForm initialData={client} onNext={handleClientNext} />
-          )}
-          {step === 2 && (
-            <TradeInForm
-              initialData={tradeIn}
-              onNext={handleTradeInNext}
-              onBack={() => setStep(1)}
-            />
-          )}
-          {step === 3 && (
-            <DesiredPhoneForm
-              initialData={desired}
-              tradeIn={tradeIn}
-              onNext={handleDesiredNext}
-              onBack={() => setStep(2)}
-            />
-          )}
-          {step === 4 && (
-            <FinancingForm
-              balance={desired.price - tradeIn.acceptedValue}
-              initialData={financing}
-              onNext={handleFinancingNext}
-              onBack={() => setStep(3)}
-            />
-          )}
-          {step === 5 && result && (
-            <ResultsView result={result} onReset={handleReset} />
-          )}
+      <main ref={contentRef} className="flex-1 overflow-y-auto overscroll-none">
+        <div className="max-w-lg mx-auto px-3 py-3">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200/60 p-4">
+            {step === 1 && (
+              <ClientForm initialData={client} onNext={handleClientNext} />
+            )}
+            {step === 2 && (
+              <TradeInForm
+                initialData={tradeIn}
+                onNext={handleTradeInNext}
+                onBack={() => setStep(1)}
+              />
+            )}
+            {step === 3 && (
+              <DesiredPhoneForm
+                initialData={desired}
+                tradeIn={tradeIn}
+                onNext={handleDesiredNext}
+                onBack={() => setStep(2)}
+              />
+            )}
+            {step === 4 && (
+              <FinancingForm
+                balance={desired.price - tradeIn.acceptedValue}
+                initialData={financing}
+                onNext={handleFinancingNext}
+                onBack={() => setStep(3)}
+              />
+            )}
+            {step === 5 && result && (
+              <ResultsView result={result} onReset={handleReset} />
+            )}
+          </div>
         </div>
-
-        <footer className="text-center mt-6 pb-4 text-[11px] text-gray-400">
-          Gordotech &middot; {new Date().getFullYear()}
-        </footer>
       </main>
     </div>
   );
