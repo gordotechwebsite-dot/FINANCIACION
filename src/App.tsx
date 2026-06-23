@@ -13,7 +13,7 @@ import type {
   FinancingConfig,
   FinancingResult,
 } from './types';
-import logoGordotech from '/logo-gordotech.png?url';
+import logoGordotech from '/logo-gordotech-white.png?url';
 
 const STEP_LABELS = ['Cliente', 'Equipo Actual', 'Equipo Nuevo', 'Financiacion', 'Resultado'];
 
@@ -69,7 +69,7 @@ export default function App() {
           <img
             src={logoGordotech}
             alt="Gordotech"
-            className="h-12 w-12 object-contain rounded-lg bg-white p-1"
+            className="h-12 w-12 object-contain"
           />
           <div className="text-center">
             <h1 className="text-white text-xl font-bold tracking-wide">GORDOTECH</h1>
