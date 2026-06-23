@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { TradeInPhone, PhoneCondition } from '../types';
+import { formatNumberWithDots, parseNumberFromDots } from '../utils/calculations';
 
 interface TradeInFormProps {
   initialData: TradeInPhone;
@@ -56,7 +57,7 @@ export default function TradeInForm({ initialData, onNext, onBack }: TradeInForm
           type="text"
           value={data.model}
           onChange={(e) => setData({ ...data, model: e.target.value })}
-          placeholder="Samsung Galaxy S23"
+          placeholder="iPhone 13"
           className={`w-full px-3 py-2 rounded-lg border outline-none transition-colors ${
             errors.model ? 'border-highlight bg-red-50/50' : 'border-gray-300 focus:border-accent'
           }`}
@@ -87,11 +88,11 @@ export default function TradeInForm({ initialData, onNext, onBack }: TradeInForm
       <div>
         <label className="text-[11px] font-medium text-gray-500 mb-0.5 block">Valor aceptado (COP)</label>
         <input
-          type="number"
-          value={data.acceptedValue || ''}
-          onChange={(e) => setData({ ...data, acceptedValue: Number(e.target.value) })}
-          placeholder="500000"
-          min={0}
+          type="text"
+          inputMode="numeric"
+          value={formatNumberWithDots(data.acceptedValue)}
+          onChange={(e) => setData({ ...data, acceptedValue: parseNumberFromDots(e.target.value) })}
+          placeholder="500.000"
           className={`w-full px-3 py-2 rounded-lg border outline-none transition-colors ${
             errors.acceptedValue ? 'border-highlight bg-red-50/50' : 'border-gray-300 focus:border-accent'
           }`}

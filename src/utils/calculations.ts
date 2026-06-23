@@ -78,6 +78,15 @@ export function calculateFinancing(
   };
 }
 
+export function formatNumberWithDots(value: number): string {
+  if (!value) return '';
+  return value.toLocaleString('es-CO');
+}
+
+export function parseNumberFromDots(text: string): number {
+  return Number(text.replace(/\./g, '').replace(/[^0-9]/g, ''));
+}
+
 export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('es-CO', {
     style: 'currency',
