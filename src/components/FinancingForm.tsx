@@ -32,51 +32,48 @@ export default function FinancingForm({ balance, initialData, onNext, onBack }: 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="mb-4">
-        <h2 className="text-lg font-bold text-primary">Plan de Financiacion</h2>
-        <p className="text-gray-400 text-xs mt-0.5">Configura las condiciones del credito</p>
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <h2 className="text-base font-bold text-primary mb-2">Plan de Financiacion</h2>
 
-      <div className="bg-primary rounded-lg px-4 py-3 text-center">
-        <p className="text-white/60 text-[11px]">Saldo a financiar</p>
-        <p className="text-white text-xl font-bold">{formatCurrency(balance)}</p>
+      <div className="bg-primary rounded-lg px-3 py-2 text-center">
+        <p className="text-white/60 text-[10px]">Saldo a financiar</p>
+        <p className="text-white text-lg font-bold">{formatCurrency(balance)}</p>
       </div>
 
       <div>
-        <label className="text-xs font-medium text-gray-500 mb-1.5 block">Frecuencia de pago</label>
+        <label className="text-[11px] font-medium text-gray-500 mb-1 block">Frecuencia de pago</label>
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => handleFrequencyChange('mensual')}
-            className={`py-3 px-3 rounded-lg border text-center transition-colors cursor-pointer ${
+            className={`py-2 px-2 rounded-lg border text-center transition-colors cursor-pointer ${
               data.frequency === 'mensual'
                 ? 'border-accent bg-accent text-white'
                 : 'border-gray-300 text-gray-600 hover:border-gray-400'
             }`}
           >
             <span className="font-semibold text-sm block">Mensual</span>
-            <span className={`text-[11px] block mt-0.5 ${data.frequency === 'mensual' ? 'text-white/70' : 'text-gray-400'}`}>6% interes &middot; Max 3 cuotas</span>
+            <span className={`text-[10px] block ${data.frequency === 'mensual' ? 'text-white/70' : 'text-gray-400'}`}>6% &middot; Max 3</span>
           </button>
           <button
             type="button"
             onClick={() => handleFrequencyChange('quincenal')}
-            className={`py-3 px-3 rounded-lg border text-center transition-colors cursor-pointer ${
+            className={`py-2 px-2 rounded-lg border text-center transition-colors cursor-pointer ${
               data.frequency === 'quincenal'
                 ? 'border-accent bg-accent text-white'
                 : 'border-gray-300 text-gray-600 hover:border-gray-400'
             }`}
           >
             <span className="font-semibold text-sm block">Quincenal</span>
-            <span className={`text-[11px] block mt-0.5 ${data.frequency === 'quincenal' ? 'text-white/70' : 'text-gray-400'}`}>5% interes &middot; Max 6 cuotas</span>
+            <span className={`text-[10px] block ${data.frequency === 'quincenal' ? 'text-white/70' : 'text-gray-400'}`}>5% &middot; Max 6</span>
           </button>
         </div>
       </div>
 
       <div>
-        <div className="flex justify-between items-baseline mb-2">
-          <label className="text-xs font-medium text-gray-500">Numero de cuotas</label>
-          <span className="text-lg font-bold text-accent">{data.installments}</span>
+        <div className="flex justify-between items-baseline mb-1">
+          <label className="text-[11px] font-medium text-gray-500">Cuotas</label>
+          <span className="text-base font-bold text-accent">{data.installments}</span>
         </div>
         <input
           type="range"
@@ -86,24 +83,24 @@ export default function FinancingForm({ balance, initialData, onNext, onBack }: 
           onChange={(e) => setData({ ...data, installments: Number(e.target.value) })}
           className="w-full cursor-pointer"
         />
-        <div className="flex justify-between text-[11px] text-gray-400 mt-1">
+        <div className="flex justify-between text-[10px] text-gray-400">
           <span>1</span>
           <span>{maxInstallments}</span>
         </div>
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+      <div className="bg-gray-50 rounded-lg p-3 space-y-1.5">
         <div className="flex justify-between text-xs">
           <span className="text-gray-500">Interes ({(interestRate * 100).toFixed(0)}%)</span>
           <span className="font-semibold text-primary">{formatCurrency(totalInterest)}</span>
         </div>
         <div className="flex justify-between text-xs">
-          <span className="text-gray-500">Total a pagar</span>
+          <span className="text-gray-500">Total</span>
           <span className="font-semibold text-primary">{formatCurrency(totalWithInterest)}</span>
         </div>
-        <div className="border-t border-gray-200 pt-2 mt-2 flex justify-between items-baseline">
-          <span className="text-xs text-gray-500">Valor por cuota</span>
-          <span className="text-lg font-bold text-accent">{formatCurrency(Math.round(installmentAmount))}</span>
+        <div className="border-t border-gray-200 pt-1.5 flex justify-between items-baseline">
+          <span className="text-xs text-gray-500">Cuota</span>
+          <span className="text-base font-bold text-accent">{formatCurrency(Math.round(installmentAmount))}</span>
         </div>
       </div>
 
@@ -111,13 +108,13 @@ export default function FinancingForm({ balance, initialData, onNext, onBack }: 
         <button
           type="button"
           onClick={onBack}
-          className="px-5 py-3 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
+          className="px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
         >
           Atras
         </button>
         <button
           type="submit"
-          className="flex-1 py-3 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
+          className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
         >
           Ver calendario
         </button>

@@ -25,63 +25,54 @@ export default function ClientForm({ initialData, onNext }: ClientFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="mb-4">
-        <h2 className="text-lg font-bold text-primary">Datos del Cliente</h2>
-        <p className="text-gray-400 text-xs mt-0.5">Completa los datos para iniciar</p>
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <h2 className="text-base font-bold text-primary mb-3">Datos del Cliente</h2>
 
       <div>
-        <label className="text-xs font-medium text-gray-500 mb-1 block">Nombre completo</label>
+        <label className="text-[11px] font-medium text-gray-500 mb-0.5 block">Nombre completo</label>
         <input
           type="text"
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
           placeholder="Juan Perez"
-          className={`w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-colors ${
-            errors.name
-              ? 'border-highlight bg-red-50/50'
-              : 'border-gray-300 focus:border-accent'
+          className={`w-full px-3 py-2 rounded-lg border outline-none transition-colors ${
+            errors.name ? 'border-highlight bg-red-50/50' : 'border-gray-300 focus:border-accent'
           }`}
         />
-        {errors.name && <p className="text-highlight text-[11px] mt-1">{errors.name}</p>}
+        {errors.name && <p className="text-highlight text-[11px] mt-0.5">{errors.name}</p>}
       </div>
 
       <div>
-        <label className="text-xs font-medium text-gray-500 mb-1 block">Cedula</label>
+        <label className="text-[11px] font-medium text-gray-500 mb-0.5 block">Cedula</label>
         <input
           type="text"
           value={data.cedula}
           onChange={(e) => setData({ ...data, cedula: e.target.value.replace(/[^0-9]/g, '') })}
           placeholder="1234567890"
-          className={`w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-colors ${
-            errors.cedula
-              ? 'border-highlight bg-red-50/50'
-              : 'border-gray-300 focus:border-accent'
+          className={`w-full px-3 py-2 rounded-lg border outline-none transition-colors ${
+            errors.cedula ? 'border-highlight bg-red-50/50' : 'border-gray-300 focus:border-accent'
           }`}
         />
-        {errors.cedula && <p className="text-highlight text-[11px] mt-1">{errors.cedula}</p>}
+        {errors.cedula && <p className="text-highlight text-[11px] mt-0.5">{errors.cedula}</p>}
       </div>
 
       <div>
-        <label className="text-xs font-medium text-gray-500 mb-1 block">Celular</label>
+        <label className="text-[11px] font-medium text-gray-500 mb-0.5 block">Celular</label>
         <input
           type="tel"
           value={data.phone}
           onChange={(e) => setData({ ...data, phone: e.target.value.replace(/[^0-9]/g, '') })}
           placeholder="3001234567"
-          className={`w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-colors ${
-            errors.phone
-              ? 'border-highlight bg-red-50/50'
-              : 'border-gray-300 focus:border-accent'
+          className={`w-full px-3 py-2 rounded-lg border outline-none transition-colors ${
+            errors.phone ? 'border-highlight bg-red-50/50' : 'border-gray-300 focus:border-accent'
           }`}
         />
-        {errors.phone && <p className="text-highlight text-[11px] mt-1">{errors.phone}</p>}
+        {errors.phone && <p className="text-highlight text-[11px] mt-0.5">{errors.phone}</p>}
       </div>
 
       <button
         type="submit"
-        className="w-full py-3 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
+        className="w-full py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer mt-2"
       >
         Continuar
       </button>

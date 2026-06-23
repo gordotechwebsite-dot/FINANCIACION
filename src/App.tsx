@@ -71,26 +71,20 @@ export default function App() {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <header className="bg-primary shrink-0">
-        <div className="max-w-lg mx-auto px-4 py-2.5 flex items-center justify-center gap-3">
-          <img
-            src={logoGordotech}
-            alt="Gordotech"
-            className="h-8 w-8 object-contain"
-          />
-          <div>
-            <h1 className="text-white text-base font-bold leading-tight">GORDOTECH</h1>
-            <p className="text-white/50 text-[9px] tracking-wider uppercase">Financiacion</p>
-          </div>
+        <div className="max-w-lg mx-auto px-4 pt-2 pb-1.5 flex items-center justify-center gap-2.5">
+          <img src={logoGordotech} alt="Gordotech" className="h-7 w-7 object-contain" />
+          <h1 className="text-white text-sm font-bold tracking-wide">GORDOTECH</h1>
         </div>
+        {step < 5 && (
+          <div className="max-w-lg mx-auto px-4 pb-2">
+            <StepIndicator currentStep={step} totalSteps={5} labels={STEP_LABELS} />
+          </div>
+        )}
       </header>
 
       <main ref={contentRef} className="flex-1 overflow-y-auto overscroll-none">
-        <div className="max-w-lg mx-auto px-4 py-4">
-          {step < 5 && (
-            <StepIndicator currentStep={step} totalSteps={5} labels={STEP_LABELS} />
-          )}
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200/60 p-4 sm:p-5">
+        <div className="max-w-lg mx-auto px-3 py-3">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200/60 p-4">
             {step === 1 && (
               <ClientForm initialData={client} onNext={handleClientNext} />
             )}
@@ -121,10 +115,6 @@ export default function App() {
               <ResultsView result={result} onReset={handleReset} />
             )}
           </div>
-
-          <footer className="text-center mt-4 pb-3 text-[11px] text-gray-400">
-            Gordotech &middot; {new Date().getFullYear()}
-          </footer>
         </div>
       </main>
     </div>
