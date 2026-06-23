@@ -22,198 +22,265 @@ function imageToBase64(img: HTMLImageElement): string {
   return canvas.toDataURL('image/png');
 }
 
+const PRIMARY = [26, 26, 46] as const;
+const ACCENT = [15, 52, 96] as const;
+const GRAY_TEXT = [100, 100, 100] as const;
+const LIGHT_BG = [245, 247, 250] as const;
+const WHITE = [255, 255, 255] as const;
+
 export async function generatePDF(result: FinancingResult): Promise<void> {
   const doc = new jsPDF();
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const margin = 20;
-  let y = 20;
+  const pw = doc.internal.pageSize.getWidth();
+  const ph = doc.internal.pageSize.getHeight();
+  const m = 18;
+  const contentW = pw - m * 2;
+  let y = 0;
 
-  // Load logo
   let logoBase64 = '';
   try {
     const logoUrl = new URL('/logo-gordotech-white.png', import.meta.url).href;
     const img = await loadImage(logoUrl);
     logoBase64 = imageToBase64(img);
   } catch {
-    // If logo fails to load, continue without it
+    // continue without logo
   }
-
-  // Header background
-  doc.setFillColor(26, 26, 46);
-  doc.rect(0, 0, pageWidth, 50, 'F');
-
-  // Logo in header
-  if (logoBase64) {
-    doc.addImage(logoBase64, 'PNG', pageWidth / 2 - 45, 5, 12, 12);
-  }
-
-  // Company name (offset right if logo present)
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
-  doc.setFont('helvetica', 'bold');
-  doc.text('GORDOTECH', pageWidth / 2 + (logoBase64 ? 3 : 0), 15, { align: 'center' });
-
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Comercio Tecnologico - Plan de Financiacion', pageWidth / 2, 26, { align: 'center' });
 
   const today = new Date();
-  doc.setFontSize(9);
-  doc.text(`Fecha: ${formatDateShort(today)}`, pageWidth / 2, 36, { align: 'center' });
-
-  y = 62;
-  doc.setTextColor(26, 26, 46);
-
-  // Client info section
-  doc.setFillColor(241, 245, 249);
-  doc.roundedRect(margin, y - 6, pageWidth - margin * 2, 38, 3, 3, 'F');
-
-  doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Datos del Cliente', margin + 5, y + 2);
-  y += 10;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Nombre: ${result.client.name}`, margin + 5, y);
-  doc.text(`Cedula: ${result.client.cedula}`, pageWidth / 2, y);
-  y += 7;
-  doc.text(`Celular: ${result.client.phone}`, margin + 5, y);
-  y += 7;
-
-  // Divider
-  y += 8;
-
-  // Trade-in section
-  doc.setFillColor(241, 245, 249);
-  doc.roundedRect(margin, y - 6, pageWidth - margin * 2, 45, 3, 3, 'F');
-
-  doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Equipo Entregado (Trade-In)', margin + 5, y + 2);
-  y += 10;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Modelo: ${result.tradeIn.model}`, margin + 5, y);
-  doc.text(`IMEI: ${result.tradeIn.imei}`, pageWidth / 2, y);
-  y += 7;
-  doc.text(`Estado: ${result.tradeIn.condition}`, margin + 5, y);
-  y += 7;
-
-  doc.setFont('helvetica', 'bold');
-  doc.text(`Valor aceptado: ${formatCurrency(result.tradeIn.acceptedValue)}`, margin + 5, y);
-  y += 7;
-
-  // Desired phone section
-  y += 8;
-
-  doc.setFillColor(241, 245, 249);
-  doc.roundedRect(margin, y - 6, pageWidth - margin * 2, 24, 3, 3, 'F');
-
-  doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Equipo Deseado', margin + 5, y + 2);
-  y += 10;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Modelo: ${result.desired.model}`, margin + 5, y);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`Precio: ${formatCurrency(result.desired.price)}`, pageWidth / 2, y);
-  y += 7;
-
-  // Financing summary
-  y += 8;
-
-  doc.setFillColor(26, 26, 46);
-  doc.roundedRect(margin, y - 6, pageWidth - margin * 2, 42, 3, 3, 'F');
-
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Resumen de Financiacion', margin + 5, y + 2);
-  y += 10;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
   const freqLabel = result.config.frequency === 'mensual' ? 'Mensual' : 'Quincenal';
-  doc.text(`Saldo a financiar: ${formatCurrency(result.balanceToFinance)}`, margin + 5, y);
-  doc.text(`Interes: ${(result.interestRate * 100).toFixed(0)}% (${freqLabel})`, pageWidth / 2, y);
-  y += 7;
-  doc.text(`Total intereses: ${formatCurrency(result.totalInterest)}`, margin + 5, y);
-  doc.text(`Total a pagar: ${formatCurrency(result.totalWithInterest)}`, pageWidth / 2, y);
-  y += 7;
-  doc.text(`Cuotas: ${result.config.installments} cuotas ${freqLabel.toLowerCase()}es`, margin + 5, y);
-  y += 7;
 
-  // Payment schedule table
-  y += 10;
-  doc.setTextColor(26, 26, 46);
-  doc.setFontSize(13);
+  // ── HEADER ──
+  doc.setFillColor(...PRIMARY);
+  doc.rect(0, 0, pw, 40, 'F');
+
+  if (logoBase64) {
+    doc.addImage(logoBase64, 'PNG', m, 8, 24, 24);
+  }
+
+  const textX = logoBase64 ? m + 30 : m;
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  doc.text('Calendario de Pagos', margin + 5, y);
-  y += 8;
+  doc.text('GORDOTECH', textX, 20);
 
-  // Table header
-  const colX = [margin + 5, margin + 25, margin + 80, margin + 120];
-  doc.setFillColor(15, 52, 96);
-  doc.roundedRect(margin, y - 5, pageWidth - margin * 2, 8, 2, 2, 'F');
-
-  doc.setTextColor(255, 255, 255);
   doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Comercio Tecnologico', textX, 27);
+
+  doc.setFontSize(8);
+  doc.setTextColor(180, 180, 200);
+  doc.text(`Documento generado el ${formatDateShort(today)}`, pw - m, 34, { align: 'right' });
+
+  // Accent stripe
+  doc.setFillColor(...ACCENT);
+  doc.rect(0, 40, pw, 3, 'F');
+
+  y = 52;
+
+  // ── TITLE ──
+  doc.setTextColor(...PRIMARY);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('No.', colX[0], y);
-  doc.text('Fecha de Pago', colX[1], y);
-  doc.text('Valor Cuota', colX[2], y);
-  doc.text('Saldo Pendiente', colX[3], y);
+  doc.text('Plan de Financiacion', m, y);
+  y += 10;
+
+  // ── CLIENT INFO (inline) ──
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...GRAY_TEXT);
+  doc.text(`Cliente: ${result.client.name}  |  CC: ${result.client.cedula}  |  Tel: ${result.client.phone}`, m, y);
+  y += 10;
+
+  // ── PHONES SIDE BY SIDE ──
+  const halfW = (contentW - 6) / 2;
+
+  // Left: Trade-in
+  doc.setFillColor(...LIGHT_BG);
+  doc.roundedRect(m, y, halfW, 42, 2, 2, 'F');
+
+  doc.setTextColor(...GRAY_TEXT);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'bold');
+  doc.text('EQUIPO ENTREGADO', m + 6, y + 8);
+
+  doc.setTextColor(...PRIMARY);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text(result.tradeIn.model, m + 6, y + 16);
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...GRAY_TEXT);
+  doc.text(`IMEI: ${result.tradeIn.imei}`, m + 6, y + 23);
+  doc.text(`Estado: ${result.tradeIn.condition}`, m + 6, y + 29);
+
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...PRIMARY);
+  doc.text(formatCurrency(result.tradeIn.acceptedValue), m + 6, y + 38);
+
+  // Right: Desired
+  const rx = m + halfW + 6;
+  doc.setFillColor(...LIGHT_BG);
+  doc.roundedRect(rx, y, halfW, 42, 2, 2, 'F');
+
+  doc.setTextColor(...GRAY_TEXT);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'bold');
+  doc.text('EQUIPO DESEADO', rx + 6, y + 8);
+
+  doc.setTextColor(...PRIMARY);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text(result.desired.model, rx + 6, y + 16);
+
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...PRIMARY);
+  doc.text(formatCurrency(result.desired.price), rx + 6, y + 38);
+
+  y += 50;
+
+  // ── FINANCING SUMMARY (dark box) ──
+  doc.setFillColor(...PRIMARY);
+  doc.roundedRect(m, y, contentW, 36, 2, 2, 'F');
+
+  const colW = contentW / 4;
+  const labels = ['Diferencia', `Interes (${(result.interestRate * 100).toFixed(0)}%)`, 'Total a pagar', 'Cuotas'];
+  const values = [
+    formatCurrency(result.balanceToFinance),
+    formatCurrency(result.totalInterest),
+    formatCurrency(result.totalWithInterest),
+    `${result.config.installments} ${freqLabel.toLowerCase()}es`,
+  ];
+
+  for (let i = 0; i < 4; i++) {
+    const cx = m + colW * i + colW / 2;
+
+    doc.setTextColor(180, 180, 200);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.text(labels[i], cx, y + 12, { align: 'center' });
+
+    doc.setTextColor(...WHITE);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(values[i], cx, y + 22, { align: 'center' });
+
+    if (i < 3) {
+      doc.setDrawColor(60, 60, 80);
+      doc.line(m + colW * (i + 1), y + 6, m + colW * (i + 1), y + 30);
+    }
+  }
+
+  y += 44;
+
+  // ── PAYMENT SCHEDULE TABLE ──
+  doc.setTextColor(...PRIMARY);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Plan de Pagos', m, y);
   y += 7;
 
-  // Table rows
-  doc.setTextColor(26, 26, 46);
+  // Table columns
+  const col1 = m + 4;
+  const col2 = m + 20;
+  const col3 = m + contentW - 70;
+  const col4 = m + contentW - 4;
+  const rowH = 8;
+
+  // Header row
+  doc.setFillColor(...ACCENT);
+  doc.roundedRect(m, y, contentW, rowH, 1.5, 1.5, 'F');
+  doc.setTextColor(...WHITE);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.text('#', col1, y + 5.5);
+  doc.text('Fecha de pago', col2, y + 5.5);
+  doc.text('Cuota', col3, y + 5.5, { align: 'right' });
+  doc.text('Saldo', col4, y + 5.5, { align: 'right' });
+  y += rowH;
+
+  // Data rows
   doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
 
   for (const payment of result.schedule) {
-    if (y > 270) {
+    if (y + rowH > ph - 50) {
       doc.addPage();
       y = 20;
     }
 
     if (payment.number % 2 === 0) {
       doc.setFillColor(248, 250, 252);
-      doc.rect(margin, y - 4, pageWidth - margin * 2, 7, 'F');
+      doc.rect(m, y, contentW, rowH, 'F');
     }
 
-    doc.text(`${payment.number}`, colX[0], y);
-    doc.text(formatDateShort(payment.date), colX[1], y);
-    doc.text(formatCurrency(payment.amount), colX[2], y);
-    doc.text(formatCurrency(payment.remainingBalance), colX[3], y);
-    y += 7;
+    doc.setTextColor(...ACCENT);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${payment.number}`, col1, y + 5.5);
+
+    doc.setTextColor(...PRIMARY);
+    doc.setFont('helvetica', 'normal');
+    doc.text(formatDateShort(payment.date), col2, y + 5.5);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text(formatCurrency(payment.amount), col3, y + 5.5, { align: 'right' });
+
+    doc.setFont('helvetica', 'normal');
+    if (payment.remainingBalance === 0) {
+      doc.setTextColor(16, 185, 129);
+      doc.text('Pagado', col4, y + 5.5, { align: 'right' });
+    } else {
+      doc.setTextColor(...GRAY_TEXT);
+      doc.text(formatCurrency(payment.remainingBalance), col4, y + 5.5, { align: 'right' });
+    }
+
+    y += rowH;
   }
 
-  // Footer
-  y += 10;
+  // Bottom line under table
   doc.setDrawColor(200, 200, 200);
-  doc.line(margin, y, pageWidth - margin, y);
-  y += 8;
+  doc.line(m, y, m + contentW, y);
 
+  // ── SIGNATURES ──
+  y += 24;
+  if (y + 30 > ph - 20) {
+    doc.addPage();
+    y = 40;
+  }
+
+  doc.setDrawColor(...PRIMARY);
+  doc.setLineWidth(0.3);
+  const sigW = 60;
+  const sigLeft = m + 10;
+  const sigRight = pw - m - sigW - 10;
+  doc.line(sigLeft, y, sigLeft + sigW, y);
+  doc.line(sigRight, y, sigRight + sigW, y);
+
+  doc.setTextColor(...PRIMARY);
   doc.setFontSize(8);
-  doc.setTextColor(100, 100, 100);
-  doc.text('Este documento es un plan de financiacion generado por Gordotech.', pageWidth / 2, y, { align: 'center' });
-  y += 5;
-  doc.text('Ambas partes se comprometen a cumplir con los terminos aqui establecidos.', pageWidth / 2, y, { align: 'center' });
+  doc.setFont('helvetica', 'bold');
+  doc.text('Firma del Cliente', sigLeft + sigW / 2, y + 5, { align: 'center' });
+  doc.text('Firma Gordotech', sigRight + sigW / 2, y + 5, { align: 'center' });
 
-  // Signature lines
-  y += 20;
-  doc.setDrawColor(26, 26, 46);
-  doc.line(margin + 5, y, margin + 70, y);
-  doc.line(pageWidth - margin - 70, y, pageWidth - margin - 5, y);
-  y += 5;
-  doc.setFontSize(9);
-  doc.setTextColor(26, 26, 46);
-  doc.text('Firma del Cliente', margin + 20, y);
-  doc.text('Firma Gordotech', pageWidth - margin - 55, y);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(...GRAY_TEXT);
+  doc.text(result.client.name, sigLeft + sigW / 2, y + 10, { align: 'center' });
+  doc.text(`CC ${result.client.cedula}`, sigLeft + sigW / 2, y + 14, { align: 'center' });
+
+  // ── FOOTER ──
+  const totalPages = doc.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    doc.setFillColor(...PRIMARY);
+    doc.rect(0, ph - 14, pw, 14, 'F');
+    doc.setTextColor(180, 180, 200);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Gordotech - Comercio Tecnologico | Este documento constituye un acuerdo de financiacion', pw / 2, ph - 6, { align: 'center' });
+  }
 
   const clientName = result.client.name.replace(/\s+/g, '_');
-  doc.save(`Financiacion_${clientName}_${formatDateShort(today)}.pdf`);
+  doc.save(`Gordotech_Financiacion_${clientName}.pdf`);
 }
