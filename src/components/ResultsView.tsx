@@ -1,20 +1,29 @@
+import { useState } from 'react';
 import type { FinancingResult } from '../types';
 import { formatCurrency, formatDateShort } from '../utils/calculations';
 import { generatePDF } from '../utils/pdfGenerator';
 
 interface ResultsViewProps {
   result: FinancingResult;
+  onBack: () => void;
   onReset: () => void;
 }
 
-export default function ResultsView({ result, onReset }: ResultsViewProps) {
+export default function ResultsView({ result, onBack, onReset }: ResultsViewProps) {
+  const [confirmed, setConfirmed] = useState(false);
   const freqLabel = result.config.frequency === 'mensual' ? 'mensual' : 'quincenal';
 
   return (
     <div className="space-y-4">
-      <h2 className="text-base font-bold text-primary">Plan de Financiacion</h2>
+      <h2 className="text-base font-bold text-primary">
+        {confirmed ? 'Plan de Financiacion' : 'Confirmar Datos'}
+      </h2>
 
-      {/* Client + phones row */}
+      {!confirmed && (
+        <p className="text-xs text-gray-400">Revisa que todo este correcto antes de confirmar</p>
+      )}
+
+      {/* Client */}
       <div className="text-xs space-y-0.5 text-gray-600">
         <p><span className="text-gray-400">Cliente:</span> {result.client.name} &middot; CC {result.client.cedula} &middot; {result.client.phone}</p>
       </div>
@@ -91,22 +100,41 @@ export default function ResultsView({ result, onReset }: ResultsViewProps) {
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2 pt-1">
-        <button
-          type="button"
-          onClick={() => { generatePDF(result); }}
-          className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
-        >
-          Exportar PDF
-        </button>
-        <button
-          type="button"
-          onClick={onReset}
-          className="px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
-        >
-          Nueva
-        </button>
-      </div>
+      {!confirmed ? (
+        <div className="flex gap-2 pt-1">
+          <button
+            type="button"
+            onClick={onBack}
+            className="px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
+          >
+            Atras
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirmed(true)}
+            className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
+          >
+            Confirmar
+          </button>
+        </div>
+      ) : (
+        <div className="flex gap-2 pt-1">
+          <button
+            type="button"
+            onClick={() => { generatePDF(result); }}
+            className="flex-1 py-2.5 bg-accent text-white rounded-lg font-semibold text-sm transition-colors hover:bg-accent/90 active:bg-accent/80 cursor-pointer"
+          >
+            Exportar PDF
+          </button>
+          <button
+            type="button"
+            onClick={onReset}
+            className="px-4 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium transition-colors hover:bg-gray-50 cursor-pointer"
+          >
+            Nueva
+          </button>
+        </div>
+      )}
     </div>
   );
 }
