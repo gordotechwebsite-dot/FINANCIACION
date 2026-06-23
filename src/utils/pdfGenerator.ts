@@ -278,7 +278,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
     doc.setTextColor(180, 180, 200);
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
-    doc.text('Gordotech - Comercio Tecnologico | Este documento constituye un acuerdo de financiacion', pw / 2, ph - 6, { align: 'center' });
+    doc.text('Gordotech - Comercio Tecnologico | gordotech.co | Este documento constituye un acuerdo de financiacion', pw / 2, ph - 6, { align: 'center' });
   }
 
   const clientName = result.client.name.replace(/\s+/g, '_');
