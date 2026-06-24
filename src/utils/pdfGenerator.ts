@@ -68,7 +68,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
 
   doc.setFontSize(8);
   doc.setTextColor(...GRAY_TEXT);
-  doc.text(`Documento generado el ${formatDateShort(today)}`, pw - m, y + 6, { align: 'right' });
+  doc.text(formatDateShort(today), pw - m, y + 6, { align: 'right' });
 
   // Thin separator line
   y += 22;
