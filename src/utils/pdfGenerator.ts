@@ -241,10 +241,6 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
     y += rowH;
   }
 
-  // Bottom line under table
-  doc.setDrawColor(...BORDER);
-  doc.line(m, y, m + contentW, y);
-
   // ── SIGNATURES ──
   y += 24;
   if (y + 30 > ph - 20) {
