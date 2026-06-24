@@ -64,7 +64,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...GRAY_TEXT);
-  doc.text('Conectando tus suenos', textX, y + 13);
+  doc.text('Conectando tus sue\u00f1os', textX, y + 13);
 
   doc.setFontSize(8);
   doc.setTextColor(...GRAY_TEXT);
@@ -82,7 +82,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   doc.setTextColor(...PRIMARY);
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('Plan de Financiacion', m, y);
+  doc.text('Plan de Financiaci\u00f3n', m, y);
   y += 10;
 
   // ── CLIENT INFO ──
@@ -277,7 +277,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   doc.setFontSize(8);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(...GRAY_TEXT);
-  doc.text('Este acuerdo tiene una vigencia de 5 dias a partir de la fecha de generacion del documento.', pw / 2, y, { align: 'center' });
+  doc.text('Este acuerdo tiene una vigencia de 5 d\u00edas a partir de la fecha de generaci\u00f3n del documento.', pw / 2, y, { align: 'center' });
 
   // ── FOOTER (thin line + text, no dark background) ──
   const totalPages = doc.getNumberOfPages();
@@ -289,7 +289,7 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
     doc.setTextColor(...GRAY_TEXT);
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
-    doc.text('Gordotech - Conectando tus suenos | gordotech.co | Este documento constituye un acuerdo de financiacion', pw / 2, ph - 8, { align: 'center' });
+    doc.text('Gordotech - Conectando tus sue\u00f1os | gordotech.co | Este documento constituye un acuerdo de financiaci\u00f3n', pw / 2, ph - 8, { align: 'center' });
   }
 
   const clientName = result.client.name.replace(/\s+/g, '_');
