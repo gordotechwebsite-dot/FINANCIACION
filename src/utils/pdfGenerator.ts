@@ -272,6 +272,17 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   doc.text(result.client.name, sigLeft + sigW / 2, y + 10, { align: 'center' });
   doc.text(`CC ${result.client.cedula}`, sigLeft + sigW / 2, y + 14, { align: 'center' });
 
+  // ── VIGENCIA NOTICE ──
+  y += 24;
+  if (y + 10 > ph - 20) {
+    doc.addPage();
+    y = 40;
+  }
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...GRAY_TEXT);
+  doc.text('Este acuerdo tiene una vigencia de 5 dias a partir de la fecha de generacion del documento.', pw / 2, y, { align: 'center' });
+
   // ── FOOTER (thin line + text, no dark background) ──
   const totalPages = doc.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
