@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import type { ClientData } from '../types';
+import type { ClientData, City } from '../types';
+
+const CITIES: { value: City; label: string }[] = [
+  { value: 'duitama', label: 'Duitama' },
+  { value: 'tunja', label: 'Tunja' },
+  { value: 'clinica', label: 'Clinica' },
+];
 
 interface ClientFormProps {
   initialData: ClientData;
@@ -27,6 +33,26 @@ export default function ClientForm({ initialData, onNext }: ClientFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
       <h2 className="text-base sm:text-xl font-bold text-primary mb-3 sm:mb-4">Datos del Cliente</h2>
+
+      <div>
+        <label className="text-[11px] sm:text-sm font-medium text-gray-500 mb-0.5 sm:mb-1 block">Sede</label>
+        <div className="grid grid-cols-3 gap-2">
+          {CITIES.map((c) => (
+            <button
+              key={c.value}
+              type="button"
+              onClick={() => setData({ ...data, city: c.value })}
+              className={`py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
+                data.city === c.value
+                  ? 'bg-accent text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div>
         <label className="text-[11px] sm:text-sm font-medium text-gray-500 mb-0.5 sm:mb-1 block">Nombre completo</label>

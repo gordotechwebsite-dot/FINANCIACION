@@ -2,10 +2,13 @@ export type PhoneCondition = 'Excelente' | 'Bueno' | 'Regular';
 
 export type PaymentFrequency = 'mensual' | 'quincenal';
 
+export type City = 'duitama' | 'tunja' | 'clinica';
+
 export interface ClientData {
   name: string;
   cedula: string;
   phone: string;
+  city: City;
 }
 
 export interface TradeInPhone {

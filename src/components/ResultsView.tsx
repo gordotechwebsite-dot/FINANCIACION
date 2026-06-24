@@ -28,6 +28,7 @@ export default function ResultsView({ result, onBack, onReset }: ResultsViewProp
       {/* Client */}
       <div className="text-xs sm:text-sm space-y-0.5 text-gray-600">
         <p><span className="text-gray-400">Cliente:</span> {result.client.name} &middot; CC {result.client.cedula} &middot; {result.client.phone}</p>
+        <p><span className="text-gray-400">Sede:</span> {result.client.city.charAt(0).toUpperCase() + result.client.city.slice(1)}</p>
       </div>
 
       {/* Phones comparison */}

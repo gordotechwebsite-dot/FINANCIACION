@@ -89,7 +89,8 @@ export async function generatePDF(result: FinancingResult): Promise<void> {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...GRAY_TEXT);
-  doc.text(`Cliente: ${result.client.name}  |  CC: ${result.client.cedula}  |  Tel: ${result.client.phone}`, m, y);
+  const cityLabel = result.client.city.charAt(0).toUpperCase() + result.client.city.slice(1);
+  doc.text(`Cliente: ${result.client.name}  |  CC: ${result.client.cedula}  |  Tel: ${result.client.phone}  |  Sede: ${cityLabel}`, m, y);
   y += 10;
 
   // ── PHONES SIDE BY SIDE ──

@@ -17,7 +17,7 @@ import logoGordotech from '/logo-gordotech-white.png?url';
 
 const STEP_LABELS = ['Cliente', 'Equipo Actual', 'Equipo Nuevo', 'Financiacion', 'Resultado'];
 
-const INITIAL_CLIENT: ClientData = { name: '', cedula: '', phone: '' };
+const INITIAL_CLIENT: ClientData = { name: '', cedula: '', phone: '', city: 'duitama' };
 const INITIAL_TRADE_IN: TradeInPhone = { imei: '', model: '', condition: 'Bueno', acceptedValue: 0 };
 const INITIAL_DESIRED: DesiredPhone = { model: '', price: 0 };
 const INITIAL_FINANCING: FinancingConfig = { frequency: 'mensual', installments: 3 };
